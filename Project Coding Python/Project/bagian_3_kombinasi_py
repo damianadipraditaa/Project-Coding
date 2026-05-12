@@ -1,0 +1,9 @@
+#kombinasi list dan dictionary
+
+keranjang_belanja = [
+    {"buah": "durian", "harga": 500000},
+    {"buah": "jeruk", "harga": 20000},
+]
+
+for data in keranjang_belanja:
+    print(f"Buah: {data['buah']}, Harga: {data['harga']}")

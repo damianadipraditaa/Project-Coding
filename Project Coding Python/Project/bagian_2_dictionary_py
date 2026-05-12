@@ -1,0 +1,10 @@
+# dictionary laptop
+
+Laptop = {"merk":"HP Laptop 15s-e0xxx", "cpu": "ryen 5 3500u","ram": "8gb"}
+print("Data Laptop", Laptop)
+print("merk:", Laptop["merk"])
+Laptop["tahun"] = 2019
+print("setelah ditambah:", Laptop)
+Laptop["ram"] = "16gb"
+"Sistem Informasi"
+print("setelah diubah:", Laptop)

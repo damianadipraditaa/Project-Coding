@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jadwal Ibadah Ramadhan • 1446 H</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #0f172a, #1e293b);
+      color: #e2e8f0;
+      min-height: 100vh;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1" fill="%23ffffff22"/><circle cx="30" cy="70" r="1.2" fill="%23ffffff22"/><circle cx="80" cy="20" r="0.8" fill="%23ffffff22"/><circle cx="60" cy="90" r="1" fill="%23ffffff22"/></svg>'),
+                    radial-gradient(circle at 30% 70%, #10b98111 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    .ramadhan-card {
+      background: rgba(30, 41, 59, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 1.5rem;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .ramadhan-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .checked {
+      background: linear-gradient(135deg, #10b981, #059669) !important;
+      color: white !important;
+      border-color: #047857 !important;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4) !important;
+    }
+
+    .motivasi {
+      font-family: 'Amiri', serif;
+      font-size: 1.25rem;
+      color: #d4af37;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    }
+
+    /* Perbaikan grid sholat agar tidak bertabrakan */
+    .sholat-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr)); /* desktop: 5 kolom */
+      gap: 0.75rem; /* jarak antar item lebih longgar */
+      margin: 1rem 0;
+    }
+
+    .sholat-grid label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.875rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .sholat-grid label:hover {
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .sholat-grid input[type="checkbox"] {
+      width: 1.25rem;
+      height: 1.25rem;
+      accent-color: #10b981;
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 640px) {
+      .sholat-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)); /* mobile: 3 kolom */
+        gap: 0.5rem;
+      }
+      .sholat-grid label {
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="max-w-5xl mx-auto px-4 py-8 md:py-12">
+
+  <!-- Header & Motivasi -->
+  <div class="text-center mb-10">
+    <div class="inline-block px-6 py-2 bg-emerald-900/40 rounded-full mb-4 text-emerald-300 font-medium">
+      <i class="fas fa-moon mr-2"></i> Bulan Suci Ramadhan 1446 H
+    </div>
+    <h1 class="text-4xl md:text-5xl font-bold mb-4">
+      <span class="text-emerald-400">Jadwal Ibadah</span> Ramadhan
+    </h1>
+    <p class="text-lg text-slate-300 mb-6">Puasa • Sholat 5 Waktu • Terawih • Tadarus Al-Qur'an</p>
+
+    <div class="motivasi italic max-w-2xl mx-auto px-4 py-3 bg-slate-800/40 rounded-xl border border-emerald-800/30">
+      "Barangsiapa berpuasa di bulan Ramadhan karena iman dan mengharap pahala dari Allah, maka diampuni dosa-dosanya yang telah lalu." (HR. Bukhari & Muslim)
+    </div>
+  </div>
+
+  <!-- Statistik -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+    <div class="ramadhan-card p-6 text-center">
+      <p class="text-4xl font-bold text-emerald-400" id="sudahPuasa">0</p>
+      <p class="mt-2 text-slate-300">Puasa</p>
+    </div>
+    <div class="ramadhan-card p-6 text-center">
+      <p class="text-4xl font-bold text-indigo-400" id="sholatCount">0</p>
+      <p class="mt-2 text-slate-300">Sholat (hari ini)</p>
+    </div>
+    <div class="ramadhan-card p-6 text-center">
+      <p class="text-4xl font-bold text-purple-400" id="terawihCount">0</p>
+      <p class="mt-2 text-slate-300">Terawih</p>
+    </div>
+    <div class="ramadhan-card p-6 text-center">
+      <p class="text-4xl font-bold text-amber-400" id="tadarusCount">0</p>
+      <p class="mt-2 text-slate-300">Tadarus</p>
+    </div>
+  </div>
+
+  <!-- Tombol Reset -->
+  <div class="text-center mb-10">
+    <button onclick="resetData()" class="bg-red-900/40 hover:bg-red-800/60 text-red-300 px-8 py-4 rounded-xl font-medium transition border border-red-700/40">
+      <i class="fas fa-sync-alt mr-2"></i> Reset Semua Data
+    </button>
+  </div>
+
+  <!-- Kalender -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-5" id="calendar"></div>
+
+</div>
+
+<script>
+// =============================================
+// KONFIGURASI RAMADHAN (ubah sesuai tahun)
+// =============================================
+const ramadhanStart = new Date(2025, 2, 1); // contoh: 1 Maret 2025 → sesuaikan
+const totalHari = 30;
+
+let ramadhanData = JSON.parse(localStorage.getItem('ramadhan1446')) || {};
+
+// =============================================
+// Render kalender
+// =============================================
+function renderCalendar() {
+  const container = document.getElementById('calendar');
+  container.innerHTML = '';
+
+  let totalPuasa = 0, totalSholat = 0, totalTerawih = 0, totalTadarus = 0;
+
+  for (let i = 0; i < totalHari; i++) {
+    const tanggal = new Date(ramadhanStart);
+    tanggal.setDate(ramadhanStart.getDate() + i);
+    const hariKe = i + 1;
+    const key = `hari${hariKe}`;
+
+    const data = ramadhanData[key] || {
+      puasa: false,
+      sholat: { subuh: false, dzuhur: false, ashar: false, maghrib: false, isya: false },
+      terawih: false,
+      tadarus: false
+    };
+
+    if (data.puasa) totalPuasa++;
+    totalSholat += Object.values(data.sholat).filter(Boolean).length;
+    if (data.terawih) totalTerawih++;
+    if (data.tadarus) totalTadarus++;
+
+    const card = document.createElement('div');
+    card.className = `ramadhan-card p-5 text-center cursor-pointer select-none ${data.puasa ? 'checked' : ''}`;
+    card.innerHTML = `
+      <div class="text-3xl font-bold mb-1 text-emerald-300">${hariKe}</div>
+      <div class="text-sm text-slate-400 mb-4">
+        ${tanggal.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' })}
+      </div>
+
+      <!-- Puasa -->
+      <div class="mb-4">
+        <label class="flex items-center justify-center gap-2 text-sm font-medium">
+          <input type="checkbox" class="w-5 h-5 accent-emerald-500" ${data.puasa ? 'checked' : ''} onchange="update('${key}', 'puasa', this.checked)">
+          <span>Puasa</span>
+        </label>
+      </div>
+
+      <!-- Sholat 5 waktu (perbaikan layout) -->
+      <div class="sholat-grid mb-4 text-xs font-medium">
+        <label class="flex flex-col items-center gap-1">
+          <input type="checkbox" class="accent-emerald-500" ${data.sholat.subuh ? 'checked' : ''} onchange="updateSholat('${key}', 'subuh', this.checked)">
+          <span>Subuh</span>
+        </label>
+        <label class="flex flex-col items-center gap-1">
+          <input type="checkbox" class="accent-emerald-500" ${data.sholat.dzuhur ? 'checked' : ''} onchange="updateSholat('${key}', 'dzuhur', this.checked)">
+          <span>Dzuhur</span>
+        </label>
+        <label class="flex flex-col items-center gap-1">
+          <input type="checkbox" class="accent-emerald-500" ${data.sholat.ashar ? 'checked' : ''} onchange="updateSholat('${key}', 'ashar', this.checked)">
+          <span>Ashar</span>
+        </label>
+        <label class="flex flex-col items-center gap-1">
+          <input type="checkbox" class="accent-emerald-500" ${data.sholat.maghrib ? 'checked' : ''} onchange="updateSholat('${key}', 'maghrib', this.checked)">
+          <span>Maghrib</span>
+        </label>
+        <label class="flex flex-col items-center gap-1">
+          <input type="checkbox" class="accent-emerald-500" ${data.sholat.isya ? 'checked' : ''} onchange="updateSholat('${key}', 'isya', this.checked)">
+          <span>Isya</span>
+        </label>
+      </div>
+
+      <!-- Terawih & Tadarus -->
+      <div class="flex justify-around text-sm mt-3">
+        <label class="flex items-center gap-2">
+          <input type="checkbox" class="accent-purple-500" ${data.terawih ? 'checked' : ''} onchange="update('${key}', 'terawih', this.checked)">
+          Terawih
+        </label>
+        <label class="flex items-center gap-2">
+          <input type="checkbox" class="accent-amber-500" ${data.tadarus ? 'checked' : ''} onchange="update('${key}', 'tadarus', this.checked)">
+          Tadarus
+        </label>
+      </div>
+    `;
+
+    container.appendChild(card);
+  }
+
+  // Update statistik
+  document.getElementById('sudahPuasa').textContent = totalPuasa;
+  document.getElementById('sholatCount').textContent = totalSholat;
+  document.getElementById('terawihCount').textContent = totalTerawih;
+  document.getElementById('tadarusCount').textContent = totalTadarus;
+}
+
+// Update data umum
+function update(key, field, value) {
+  if (!ramadhanData[key]) ramadhanData[key] = { puasa: false, sholat: {}, terawih: false, tadarus: false };
+  ramadhanData[key][field] = value;
+  localStorage.setItem('ramadhan1446', JSON.stringify(ramadhanData));
+  renderCalendar();
+}
+
+// Update sholat khusus
+function updateSholat(key, waktu, value) {
+  if (!ramadhanData[key]) ramadhanData[key] = { puasa: false, sholat: {}, terawih: false, tadarus: false };
+  ramadhanData[key].sholat[waktu] = value;
+  localStorage.setItem('ramadhan1446', JSON.stringify(ramadhanData));
+  renderCalendar();
+}
+
+// Reset semua data
+function resetData() {
+  if (confirm("Yakin ingin menghapus semua catatan ibadah Ramadhan?")) {
+    localStorage.removeItem('ramadhan1446');
+    ramadhanData = {};
+    renderCalendar();
+  }
+}
+
+// Jalankan aplikasi
+renderCalendar();
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+Nama = (input("Masukkann Nama Anda :"))
+Umur = int(input("Masukkan Umur Anda : "))
+Tinggi = float(input("Masukkann Tinggi Anda :"))
+Berat_badan = float(input("Masukkan Berat Badan Anda :"))
+Alamat = (input("Masukkan Alamat Anda :"))
+Hobi = (input("Masukkan Hobi Anda :"))
+print(f"Nama Anda Adalah : {Nama}, Umur Anda Adalah : {Umur}, Tinggi Anda Adalah : {Tinggi}, Berat Badan Anda Adalah : {Berat_badan}, Alamat Anda Adalah : {Alamat}, Hobi Anda Adalah : {Hobi}")
+print(type(Nama),type(Umur),type(Tinggi),type(Berat_badan),type(Alamat),type(Hobi))

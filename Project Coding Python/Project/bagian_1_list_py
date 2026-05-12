@@ -1,0 +1,10 @@
+# Contoh: Tipe data hobi
+
+hobi = ["memdengarkan musik", "bermain game", "berenang"]
+print("daftar hobi:, hobi")
+print("hobi pertama:", hobi[0])
+print("hobi kedua:", hobi[1])
+hobi[1] = "menononton anime"
+print("setelah diubah:", hobi)
+hobi.append("bermain gitar")
+print("setelah ditambahkan:", hobi)
